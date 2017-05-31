@@ -10,10 +10,10 @@ initdate = "1999-01-01"
 from = "2003-01-01"
 to = "2015-12-31"
 
-symbols = "SPY"
+symbols = "CEMB"
 
 getSymbols(symbols, from = from, to = to, src = "yahoo", adjust = TRUE)
-stock("SPY", currency = "USD", multiplier = 1)
+stock(symbols, currency = "USD", multiplier = 1)
 
 tradesize = 100000
 initeq = 100000
@@ -21,7 +21,7 @@ initeq = 100000
 strategy.st = portfolio.st = account.st = "firststrat"
 rm.strat(strategy.st)
 
-initPortf(portfolio.st, symbols = "SPY", initDate = initdate, currency = "USD")
+initPortf(portfolio.st, symbols = symbols, initDate = initdate, currency = "USD")
 initAcct(account.st, portfolios = portfolio.st, initDate = initdate, currency = "USD", initEq = initeq)
 initOrders(portfolio.st, initDate = initdate)
 strategy(strategy.st, store = TRUE)
@@ -47,3 +47,7 @@ add.indicator(strategy = strategy.st,
               label = "RSI_3"
 )
 
+#result = applyIndicators(strategy = strategy.st, mktdata = Cl(DATA))
+#result = applyIndicators(strategy = strategy.st, mktdata = OHLC(DATA))
+
+#HLC(CEMB["2017-05-25/2017-05-30"])
