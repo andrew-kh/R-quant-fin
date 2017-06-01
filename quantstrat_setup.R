@@ -51,3 +51,38 @@ add.indicator(strategy = strategy.st,
 #result = applyIndicators(strategy = strategy.st, mktdata = OHLC(DATA))
 
 #HLC(CEMB["2017-05-25/2017-05-30"])
+
+
+add.signal(strategy = strategy.st, name = "sigComparison",
+           arguments = list(columns = c("SMA50","SMA200"), relationship = "gt"),
+           label = "longfilter")
+
+add.signal(strategy = strategy.st, name = "sigCrossover",
+           arguments = list(columns = c("SMA50","SMA200"), relationship = "lt"),
+           label = "filterexit")
+
+add.signal(strategy = strategy.st, name = "sigThreshold",
+           arguments = list(column = "DVO_2_126", relationship = "lt", threshold = 20, cross = FALSE),
+           label = "longthreshold")
+
+add.signal(strategy = strategy.st, name = "sigThreshold",
+           arguments = list(column = "DVO_2_126", relationship = "gt", threshold = 80, cross = TRUE),
+           label = "thresholdexit")
+
+#result_w_sig = applySignals(strategy = strategy.st, mktdata = result)
+
+add.signal(strategy = strategy.st, name = "sigFormula",
+           arguments = list(formula = "longfilter & longthreshold", cross = TRUE),
+           label = "longentry")
+
+add.rule(strategy.st, name = "ruleSignal", 
+         arguments = list(sigcol = "thresholdexit", sigval = TRUE, orderqty = "all", 
+                          ordertype = "market", orderside = "long", 
+                          replace = FALSE, prefer = "Open"), 
+         type = "exit")
+
+add.rule(strategy.st, name = "ruleSignal", 
+         arguments=list(sigcol = "longentry", sigval = TRUE, orderqty = 1,
+                        ordertype = "market", orderside = "long",
+                        replace = FALSE, prefer = "Open"),
+         type = "enter")
